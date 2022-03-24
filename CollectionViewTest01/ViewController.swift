@@ -73,16 +73,34 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = myCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        cell.backgroundColor = .black
+        cell.layer.cornerRadius = 60
         
-        //cell.backgroundColor = .black
+        // 초기화나 셀이 뷰를 add해주는 코드가 있다면 재사용 될 때마다 뷰를 추가하기 때문에 제거하는 코드 삽입
+        for subview in cell.subviews {
+            subview.removeFromSuperview()
+        }
+        
         let imageView = UIImageView()
         imageView.image = UIImage(named: myImages[indexPath.row].name)
         
-        // 이부분 처리 필요
-        //cell.contentView = imageView
+        //imageView.layer.masksToBounds = true // 아래와 같으나 layer의 프로퍼티임
+        imageView.clipsToBounds = true // 위와 같으나 view의 프로퍼티임
         
-        cell.layer.cornerRadius = 60
+        imageView.layer.cornerRadius = 60
+        imageView.frame = CGRect(x: 15, y: 15, width: cell.frame.width - 30, height: cell.frame.height - 30)
+
+        // 아래 주석 다 안됨
+        //cell.contentView.frame = CGRect(x: 5, y: 5, width: cell.frame.width - 10, height: cell.frame.height - 10)
+//        cell.contentView.topAnchor.constraint(equalTo: cell.topAnchor, constant: 10).isActive = true
+//        cell.contentView.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: 10).isActive = true
+//        cell.contentView.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
+//        cell.contentView.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: 10).isActive = true
         
+        cell.contentView.layer.cornerRadius = 60
+        cell.contentView.backgroundColor = .blue
+        cell.contentView.addSubview(imageView)
+
         return cell
     }
     
